@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hermes — the open-source AI agent that finishes coding tasks</title>
+<meta name="description" content="Hermes is an open-source AI agent for coding. It reads your repo, writes the code, runs the tests, repairs failures, and keeps working — from your terminal, your desktop, or Telegram.">
+<meta name="color-scheme" content="light dark">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="Hermes — the open-source AI agent that finishes coding tasks">
+<meta property="og:description" content="It runs the job and verifies it. Self-improving skills, persistent memory, 20+ platforms, MIT licensed.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="styles.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%230053fd'/><text x='16' y='23' font-family='Helvetica,Arial' font-size='20' font-weight='700' fill='white' text-anchor='middle'>H</text></svg>">
+
+<script>
+/* Applied before first paint so the page never flashes the wrong theme. */
+(function () {
+  var t = null;
+  try { t = localStorage.getItem('lp-theme'); } catch (e) {}
+  if (t !== 'light' && t !== 'dark') {
+    t = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
+  }
+  document.documentElement.setAttribute('data-theme', t);
+})();
+</script>
+</head>
+
+<body id="top">
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="nav" id="nav">
+  <div class="wrap nav-in">
+    <a class="brand" href="#top">
+      <span class="brand-mark" aria-hidden="true">H</span>
+      <span class="brand-name">Hermes</span>
+    </a>
+
+    <nav class="nav-links" aria-label="Sections">
+      <a href="#loop">How it works</a>
+      <a href="#capabilities">Capabilities</a>
+      <a href="#surfaces">Surfaces</a>
+      <a href="#compare">Comparison</a>
+    </nav>
+
+    <div class="nav-act">
+      <button id="themeToggle" class="theme-btn" type="button" aria-label="Switch to dark mode">
+        <svg class="i-sun" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+          <circle cx="12" cy="12" r="4.2"/>
+          <path d="M12 2.6v2.2M12 19.2v2.2M4.4 12H2.2M21.8 12h-2.2M6.3 6.3 4.8 4.8M19.2 19.2l-1.5-1.5M17.7 6.3l1.5-1.5M4.8 19.2l1.5-1.5"/>
+        </svg>
+        <svg class="i-moon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20.5 14.6A8.6 8.6 0 0 1 9.4 3.5a8.6 8.6 0 1 0 11.1 11.1Z"/>
+        </svg>
+      </button>
+      <a class="btn btn-primary btn-sm" href="https://github.com/NousResearch/hermes-agent" target="_blank" rel="noopener">GitHub</a>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+
+  <!-- ── Hero ─────────────────────────────────────────────────────────── -->
+  <section class="hero">
+    <div class="wrap hero-in">
+      <div class="hero-copy">
+        <p class="tag"><span class="tag-dot" aria-hidden="true"></span>Open source · MIT licensed</p>
+
+        <h1>The agent that <em>finishes</em> the task.</h1>
+
+        <p class="lede">
+          Most AI coding tools hand you a suggestion and leave the work. Hermes reads your
+          repository, writes the change, runs the tests, reads the failures, and tries again
+          &mdash; until the job is actually done and verified.
+        </p>
+
+        <div class="hero-cta">
+          <a class="btn btn-primary" href="#start">Install in one command</a>
+          <a class="btn btn-ghost" href="https://hermes-agent.nousresearch.com/docs" target="_blank" rel="noopener">Read the docs</a>
+        </div>
+
+        <ul class="hero-facts">
+          <li><b>20+</b><span>platforms, from terminal to Telegram</span></li>
+          <li><b>Any</b><span>LLM provider, or your own OAuth login</span></li>
+          <li><b>0</b><span>lock-in &mdash; self-host it yourself</span></li>
+        </ul>
+      </div>
+
+      <!-- Real artifact: an actual session, not decoration -->
+      <div class="hero-term reveal" aria-label="Example Hermes session">
+        <div class="term-bar">
+          <span class="term-dot" aria-hidden="true"></span>
+          <span class="term-title">~/projects/api &mdash; hermes</span>
+        </div>
+        <pre class="term-body"><code><span class="c-prompt">&gt;</span> add rate limiting to the public endpoints and make sure the tests pass
+
+<span class="c-dim">reading</span>   src/middleware/ · 14 files
+<span class="c-dim">wrote</span>     src/middleware/rate_limit.py
+<span class="c-dim">wrote</span>     tests/test_rate_limit.py
+<span class="c-run">$ pytest tests/ -q</span>
+<span class="c-ok">24 passed in 3.11s</span>
+
+<span class="c-dim">wrote</span>     src/routes/quotes.py
+<span class="c-run">$ pytest tests/ -q</span>
+<span class="c-ok">31 passed in 3.44s</span>
+
+<span class="c-ok">&#10003; done</span> <span class="c-dim">&mdash; 2 files added, 1 modified, suite green</span></code></pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── The loop ─────────────────────────────────────────────────────── -->
+  <section id="loop">
+    <div class="wrap">
+      <div class="head reveal">
+        <p class="eyebrow">How it works</p>
+        <h2>A loop, not a suggestion</h2>
+        <p class="lede">The difference between a code assistant and an agent is what happens after the first draft. Hermes runs the same five steps until the work verifies &mdash; and it costs you nothing to walk away while it does.</p>
+      </div>
+
+      <ol class="loop reveal">
+        <li class="loop-step">
+          <span class="loop-n" aria-hidden="true">01</span>
+          <h3>Read</h3>
+          <p>Searches the real repository &mdash; not a snippet you pasted. Follows imports, reads the tests, learns the conventions already in the code.</p>
+        </li>
+        <li class="loop-step">
+          <span class="loop-n" aria-hidden="true">02</span>
+          <h3>Write</h3>
+          <p>Edits files through real patches instead of asking you to paste a diff back in. Existing style is the style it follows.</p>
+        </li>
+        <li class="loop-step">
+          <span class="loop-n" aria-hidden="true">03</span>
+          <h3>Run</h3>
+          <p>A full shell, a browser, MCP servers, your package manager. Build, migrate, deploy &mdash; whatever the task actually needs.</p>
+        </li>
+        <li class="loop-step">
+          <span class="loop-n" aria-hidden="true">04</span>
+          <h3>Verify</h3>
+          <p>Runs your test suite and reads the output. A change that compiles is not a change that works, so this step is not optional.</p>
+        </li>
+        <li class="loop-step">
+          <span class="loop-n" aria-hidden="true">05</span>
+          <h3>Iterate</h3>
+          <p>A failing assertion sends it back to step&nbsp;2 with the actual error in hand. This is where most assistants stop.</p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ── Capabilities: an editorial ledger, not a tile grid ───────────── -->
+  <section id="capabilities" class="alt">
+    <div class="wrap">
+      <div class="head reveal">
+        <p class="eyebrow">Capabilities</p>
+        <h2>It gets better the more you use it</h2>
+        <p class="lede">Most tools start from zero every session. Hermes keeps what it learned &mdash; your conventions, your commands, what worked last time.</p>
+      </div>
+
+      <div class="ledger reveal">
+        <div class="lrow">
+          <p class="lkey">Memory</p>
+          <div class="lbody">
+            <h3>Persistent, and yours</h3>
+            <p>Preferences, project constraints, environment facts. It carries them into the next session, and next month. Pluggable backends, and a place to see and edit exactly what it has stored about you.</p>
+          </div>
+        </div>
+
+        <div class="lrow">
+          <p class="lkey">Skills</p>
+          <div class="lbody">
+            <h3>Writes its own procedures</h3>
+            <p>When it learns a non-obvious procedure for your codebase, it saves that as a skill and loads it next time. Skills are plain files you can read, edit, and share &mdash; not a black box.</p>
+          </div>
+        </div>
+
+        <div class="lrow lrow-wide">
+          <p class="lkey">Automation</p>
+          <div class="lbody">
+            <h3>Runs while you are not looking</h3>
+            <p>Cron jobs, webhooks, and delegated subagents handle the overnight chores: dependency bumps, triage, batch refactors, flaky-test hunts. Results arrive where you already are, and you approve anything risky. <b>Every command that could destroy something asks first.</b></p>
+          </div>
+          <div class="lproof">
+            <p class="lproof-k">Approval modes</p>
+            <p class="lproof-v">per-session YOLO toggle &middot; dangerous-command prompts &middot; sandboxed &middot; secret redaction</p>
+          </div>
+        </div>
+
+        <div class="lrow">
+          <p class="lkey">Models</p>
+          <div class="lbody">
+            <h3>Any provider, mid-task</h3>
+            <p>OpenRouter, Anthropic, OpenAI, Google, DeepSeek, xAI, or a local model. Swap models between steps when one is better for a subtask &mdash; without restarting the work.</p>
+          </div>
+        </div>
+
+        <div class="lrow">
+          <p class="lkey">Control</p>
+          <div class="lbody">
+            <h3>Yours to run</h3>
+            <p>One shell command installs it. No account, no telemetry, no hosted control plane. It runs on your machine, against your keys, and you can read every line of it.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Surfaces ─────────────────────────────────────────────────────── -->
+  <section id="surfaces">
+    <div class="wrap">
+      <div class="head reveal">
+        <p class="eyebrow">Surfaces</p>
+        <h2>One agent. Six ways to reach it.</h2>
+        <p class="lede">Every surface is the same agent with the same config, keys, sessions, and memory. Start a task on your phone, finish it at your desk, and the transcript is one thread.</p>
+      </div>
+
+      <div class="surfs reveal">
+        <div class="surf surf-now">
+          <p class="surf-k">terminal</p>
+          <h3>CLI &amp; TUI</h3>
+          <p>Scriptable one-shot queries, or a full terminal UI with docked widgets.</p>
+        </div>
+        <div class="surf">
+          <p class="surf-k">native app</p>
+          <h3>Desktop</h3>
+          <p>Streaming tool activity, a live preview rail, and a browser with comment mode.</p>
+        </div>
+        <div class="surf">
+          <p class="surf-k">browser</p>
+          <h3>Dashboard</h3>
+          <p>Admin panel for channels, MCP servers, webhooks, memory, and profiles.</p>
+        </div>
+        <div class="surf">
+          <p class="surf-k">20+ platforms</p>
+          <h3>Messaging</h3>
+          <p>Telegram, Discord, Slack, WhatsApp, Signal, Teams, and the rest &mdash; full tool access, not just chat.</p>
+        </div>
+        <div class="surf">
+          <p class="surf-k">IDE</p>
+          <h3>ACP server</h3>
+          <p>Plugs into VS&nbsp;Code, Zed, and JetBrains alongside your other assistants.</p>
+        </div>
+        <div class="surf">
+          <p class="surf-k">local API</p>
+          <h3>Proxy</h3>
+          <p>An OpenAI-compatible endpoint on localhost. Point any tool at it, no API key.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Comparison ───────────────────────────────────────────────────── -->
+  <section id="compare" class="alt">
+    <div class="wrap">
+      <div class="head reveal">
+        <p class="eyebrow">Where it differs</p>
+        <h2>An agent, not an autocomplete box</h2>
+        <p class="lede">Most assistants stop at a suggestion and hand you the rest. The gap between that and finishing the job is exactly what Hermes was built to close.</p>
+      </div>
+
+      <div class="cmp-scroll reveal">
+        <table class="cmp">
+          <thead>
+            <tr>
+              <th><span class="sr-only">Capability</span></th>
+              <th>Chat assistants</th>
+              <th>IDE copilots</th>
+              <th class="emph">Hermes</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">Finishes the task</th>
+              <td>Suggests code for you to apply</td>
+              <td>Completes at the cursor</td>
+              <td class="emph">Runs the job and verifies it</td>
+            </tr>
+            <tr>
+              <th scope="row">Runs the tests</th>
+              <td>Cannot</td>
+              <td>Sometimes</td>
+              <td class="emph">Always, and repairs failures</td>
+            </tr>
+            <tr>
+              <th scope="row">Real terminal &amp; browser</th>
+              <td>No</td>
+              <td>Limited to the editor</td>
+              <td class="emph">Full shell, browser, MCP</td>
+            </tr>
+            <tr>
+              <th scope="row">Works without you watching</th>
+              <td>No</td>
+              <td>No</td>
+              <td class="emph">Cron jobs and background runs</td>
+            </tr>
+            <tr>
+              <th scope="row">Remembers your project</th>
+              <td>Conversation only</td>
+              <td>Repo index only</td>
+              <td class="emph">Persistent memory and skills</td>
+            </tr>
+            <tr>
+              <th scope="row">Reaches you elsewhere</th>
+              <td>One chat window</td>
+              <td>The IDE</td>
+              <td class="emph">20+ platforms, incl. Telegram</td>
+            </tr>
+            <tr>
+              <th scope="row">Open source</th>
+              <td>Varies</td>
+              <td>Varies</td>
+              <td class="emph">MIT, self-hostable</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Get started ─────────────────────────────────────────────────── -->
+  <section id="start">
+    <div class="wrap">
+      <div class="cta-grid">
+        <div>
+          <p class="eyebrow">Get started</p>
+          <h2>One command to install</h2>
+          <p class="lede">Nothing to configure before it runs. Bring your own API key or sign in with an OAuth provider &mdash; the setup wizard walks you through the rest.</p>
+        </div>
+      </div>
+
+      <div class="ribbon reveal">
+        <span class="ribbon-cmd"><b>$</b> curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash</span>
+        <button class="ribbon-copy" id="copyBtn" type="button">Copy</button>
+      </div>
+
+      <div class="hero-cta">
+        <a class="btn btn-primary" href="https://github.com/NousResearch/hermes-agent" target="_blank" rel="noopener">Browse the source</a>
+        <a class="btn btn-ghost" href="https://hermes-agent.nousresearch.com/docs" target="_blank" rel="noopener">Read the docs</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap foot">
+    <div>
+      <div class="brand" style="margin-bottom:.5rem">
+        <span class="brand-mark" aria-hidden="true">H</span>
+        <span class="brand-name">Hermes</span>
+      </div>
+      <small>An open-source AI agent for coding, by Nous Research. MIT licensed.</small>
+    </div>
+    <div class="foot-links">
+      <a href="https://github.com/NousResearch/hermes-agent" target="_blank" rel="noopener">GitHub</a>
+      <a href="https://hermes-agent.nousresearch.com/docs" target="_blank" rel="noopener">Documentation</a>
+      <a href="https://hermes-agent.nousresearch.com/docs/llms.txt" target="_blank" rel="noopener">Docs index</a>
+      <a href="#top">Back to top</a>
+    </div>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
